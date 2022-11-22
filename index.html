@@ -40,13 +40,17 @@
 
         // aggiungo un elemento geometrico
 
-        var geometry = new THREE.BoxGeometry(1,1,1);
+        var geometry = new THREE.BoxGeometry(2,1,1);
         var material = new THREE.MeshLambertMaterial({color: 0x288ba8});
         
 
         // questa è la nostra mesh che riceve in input geometry e material 
         var mesh=new THREE.Mesh(geometry,material); 
         
+
+        // muovere la mesh
+
+        mesh.position.x=3;
 
         
 
