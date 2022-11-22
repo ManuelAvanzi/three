@@ -14,15 +14,12 @@
 
 
     <script>
+        var scene = new THREE.Scene();
 
-        var scene=new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000)
+        camera.position.z = 5;
 
-        var camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000)
-        
-        // pozione della camera iniziale a 5 sull asse z
-        camera.position.z=5;
-        
-        var renderer= new THREE.WebGLRenderer({antialias: true});
+        var renderer = new THREE.WebGLRenderer({antialias: true});
         renderer.setClearColor("#e5e5e5");
         renderer.setSize(window.innerWidth,window.innerHeight);
 
@@ -30,67 +27,68 @@
 
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth,window.innerHeight);
-            camera.aspect=window.innerWidth / window.innerHeight;
+            camera.aspect = window.innerWidth / window.innerHeight;
 
-            // projection
             camera.updateProjectionMatrix();
         })
 
-        
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
 
-        // aggiungo un elemento geometrico
-
-        var geometry = new THREE.BoxGeometry(1,1,1);
+        var geometry = new THREE.BoxGeometry(1, 1, 1);
         var material = new THREE.MeshLambertMaterial({color: 0x288ba8});
-        
+        //var mesh = new THREE.Mesh(geometry, material);
 
-        // questa è la nostra mesh che riceve in input geometry e material 
-        var mesh=new THREE.Mesh(geometry,material); 
-        
+        //scene.add(mesh);
 
-        // muovere la mesh
+        meshX = -10;
+        for(var i = 0; i<15;i++) {
+            var mesh = new THREE.Mesh(geometry, material);
+            mesh.position.x = (Math.random() - 0.5) * 10;
+            mesh.position.y = (Math.random() - 0.5) * 10;
+            mesh.position.z = (Math.random() - 0.5) * 10;
+            scene.add(mesh);
+            meshX+=1;
+        }
 
-        mesh.position.x=-3;
-        mesh.position.y=1;
-        mesh.position.z=-1;
 
-        // ruotare la mesh 
-
-        mesh.rotation.y=80;
-        mesh.rotation.z=30;
-        
-
-        // qui aggiungo un punto luce che ci permette di vedere il colore della mesh
-        var light= new THREE.PointLight(0xffffff,1,500);
-        light.position.set(10,0,25);
+        var light = new THREE.PointLight(0xFFFFFF, 1, 1000)
+        light.position.set(0,0,0);
         scene.add(light);
 
-        scene.add(mesh);
+        var light = new THREE.PointLight(0xFFFFFF, 2, 1000)
+        light.position.set(0,0,25);
+        scene.add(light);
 
-        
-        // renderer.render(scene,camera);
-        // questa funzione impedisce che la scena si strecci allo scalare della viewport del browser 
-        var render=function(){
+        var render = function() {
             requestAnimationFrame(render);
 
-            // qui specifico una animazione che aggiunge 0.01 ai gradi di rotazione della mesh ogni volta che viene chiamata la
-            // funzione render 
 
-            mesh.rotation.x +=0.03;
-            mesh.rotation.y +=0.01;
-            
-            renderer.render(scene,camera);
-        };
+            renderer.render(scene, camera);
+        }
+
+        function onMouseMove(event) {
+            event.preventDefault();
+
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            var intersects = raycaster.intersectObjects(scene.children, true);
+            for (var i = 0; i < intersects.length; i++) {
+                this.tl = new TimelineMax();
+                this.tl.to(intersects[i].object.scale, 1, {x: 2, ease: Expo.easeOut})
+                this.tl.to(intersects[i].object.scale, .5, {x: .5, ease: Expo.easeOut})
+                this.tl.to(intersects[i].object.position, .5, {x: 2, ease: Expo.easeOut})
+                this.tl.to(intersects[i].object.rotation, .5, {y: Math.PI*.5, ease: Expo.easeOut}, "=-1.5")
+            }
+        }
+
+
+
+        window.addEventListener('mousemove', onMouseMove);
         render();
-
-        this.tl=new TimelineMax({paused: true}); // questo è messo in pausa fino a quando l'user non preme da qualche parte 
-        this.tl.to(this.mesh.scale,1,{x:2, ease: Expo.easeOut})
-        this.tl.to(this.mesh.scale,.5,{x:.5, ease: Expo.easeOut})
-        this.tl.to(this.mesh.position,.5,{x:1, ease: Expo.easeOut})
-
-        document.body.addEventListener('click',()=>{
-            this.tl.play();
-        })
     </script>
 </body>
 </html>
