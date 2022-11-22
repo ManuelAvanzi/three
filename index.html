@@ -83,10 +83,14 @@
         };
         render();
 
-        this.tl=new TimelineMax().delay(.3);
+        this.tl=new TimelineMax({paused: true}); // questo è messo in pausa fino a quando l'user non preme da qualche parte 
         this.tl.to(this.mesh.scale,1,{x:2, ease: Expo.easeOut})
         this.tl.to(this.mesh.scale,.5,{x:.5, ease: Expo.easeOut})
         this.tl.to(this.mesh.position,.5,{x:1, ease: Expo.easeOut})
+
+        document.body.addEventListener('click',()=>{
+            this.tl.play();
+        })
     </script>
 </body>
 </html>
