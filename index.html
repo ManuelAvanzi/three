@@ -18,9 +18,10 @@
         var scene=new THREE.Scene();
 
         var camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000)
-        // pozione della camera iniziale a 5 sull asse z
         
+        // pozione della camera iniziale a 5 sull asse z
         camera.position.z=5;
+        
         var renderer= new THREE.WebGLRenderer({antialias: true});
         renderer.setClearColor("#e5e5e5");
         renderer.setSize(window.innerWidth,window.innerHeight);
@@ -40,12 +41,21 @@
         // aggiungo un elemento geometrico
 
         var geometry = new THREE.SphereGeometry(1,10,10);
-        var material = new THREE.MeshLambertMaterial({color: 0xFFCC00});
+        var material = new THREE.MeshLambertMaterial({color: 0x288ba8});
+        
 
+        // questa è la nostra mesh che riceve in input geometry e material 
         var mesh=new THREE.Mesh(geometry,material); 
         
-        // questo è un commento
+
+        // qui aggiungo un punto luce che ci permette di vedere il colore della mesh
+        var light= new THREE.PointLight(0xffffff,1,500);
+        light.position.set(10,0,25);
+        scene.add(light);
+
         scene.add(mesh);
+
+        
         renderer.render(scene,camera);
     </script>
 </body>
