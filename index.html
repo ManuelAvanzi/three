@@ -40,7 +40,7 @@
 
         // aggiungo un elemento geometrico
 
-        var geometry = new THREE.BoxGeometry(2,1,1);
+        var geometry = new THREE.BoxGeometry(1,1,1);
         var material = new THREE.MeshLambertMaterial({color: 0x288ba8});
         
 
@@ -50,8 +50,14 @@
 
         // muovere la mesh
 
-        mesh.position.x=3;
+        mesh.position.x=-3;
+        mesh.position.y=1;
+        mesh.position.z=-1;
 
+        // ruotare la mesh 
+
+        mesh.rotation.y=80;
+        mesh.rotation.z=30;
         
 
         // qui aggiungo un punto luce che ci permette di vedere il colore della mesh
